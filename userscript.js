@@ -43,8 +43,7 @@
            numSetsWithPart: int(7),
            year: int(8),
            numSetsWithDesign: int(9),
-           designYear: int(10),
-           owned: int(11)
+           designYear: int(10)
        }
    }
    const colorInt = color => [
