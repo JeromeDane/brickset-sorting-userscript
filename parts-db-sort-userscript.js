@@ -258,23 +258,25 @@
                 case '28192': return 'roof cutout'
             }
             const name = getName(part)
-            if(name.match('attic')) return 'roof attic'
+            if(name.match('attic')) return 'roof end attic'
             if(name.match('pyramid')) return 'pyramid'
             if(name.match('ramp')) return 'ramp'
             if(name.match(/roof.+tile.+2\/3/)) return 'roof 00'
             if(name.match(/corner.+inside/)) return 'roof corner inside'
-            if(name.match(/corner.+outs|outs.+corner/)) return 'roof corner outside'
-            if(name.match(/corner/)) return 'roof corner outside'
+            if(name.match(/corner.+outs|outs.+corner/)) return 'roof corner outside 01'
+            if(name.match(/corner/)) return 'roof corner outside 01'
             if(name.match(/end ridged tile/)) return 'roof end'
             if(name.match(/doub.+(roof.+inv|inv.+roof)/)) return 'roof inverted double'
             if(name.match(/roof.+inv|inv.+roof/) && name.match('corn')) return 'roof inverted corner'
             if(name.match(/roof.+inv|inv.+roof/)) return 'roof inverted'
             if(name.match(/roof.+tile.+plate/)) return 'roof plate'
-            if(name.match(/roof.+tile.+45/)) return 'roof 01'
+            if(name.match(/roof.+tile.+bot/)) return 'roof corner outside 00'
             if(name.match(/ridged.+tile.+25/)) return 'roof ridge'
             if(name.match(/ridged.+tile.+45/)) return 'roof ridge'
-            if(name.match(/roof.+tile/)) return 'roof 01'
-            if(name.match(/ridged.+tile/)) return 'roof 01'
+            if(name.match(/roof.+tile.+45/)) return `roof 01 ${getSize(part)} 02`
+            if(name.match(/roof.+tile.+25/)) return `roof 01 ${getSize(part)} 01`
+            if(name.match(/roof.+tile/)) return `roof 01 ${getSize(part)} 00`
+            if(name.match(/ridged.+tile/)) return `roof 01 ${getSize(part)} 00`
         }
     }
 
