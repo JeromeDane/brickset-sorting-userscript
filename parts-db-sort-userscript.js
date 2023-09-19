@@ -128,15 +128,20 @@
 
     const resize = {
       3063: '2x2',
+      4460: '1x2x3',
       6143: '2x2',
       11215: '2x5x1',
       30068: '1x1',
       30151: '2x2x2'
+
     }
     const getSize = node => (
         resize[getDesign(node)] ||
-        node.querySelector('h1 a').innerText.toLowerCase().match(/\d+x\d+(x\d+)?/)?.[0]
-       )?.replace(/\d+x\d+(x\d+)?/i, n => {
+        node.querySelector('h1 a').innerText.toLowerCase().match(/\d+\s*x\s*\d+(\s*x\s*\d+(\/\d)?)?/)?.[0]
+       )
+       ?.replaceAll(' ', '')
+       .replace(/(\d+)\/(\d+)/, (_, numerator, denominator) => (numerator / denominator).toFixed(2))
+       .replace(/\d+x\d+(x\d+)?/i, n => {
             const sizes = n.split('x')
             if(sizes.length == 2) sizes.push('0')
             const height = sizes[2]
@@ -246,6 +251,30 @@
             if(name.match('wing')) return 'wing' // must come before hole
             if(name.match('hole')) return 'hole'
             if(name.match('technic')) return 'technic ' + getSize(part)
+        },
+        'Bricks, With Slope': part => {
+            switch(getDesign(part)) {
+                case '35464': return 'roof ridge'
+                case '28192': return 'roof cutout'
+            }
+            const name = getName(part)
+            if(name.match('attic')) return 'roof attic'
+            if(name.match('pyramid')) return 'pyramid'
+            if(name.match('ramp')) return 'ramp'
+            if(name.match(/roof.+tile.+2\/3/)) return 'roof 00'
+            if(name.match(/corner.+inside/)) return 'roof corner inside'
+            if(name.match(/corner.+outs|outs.+corner/)) return 'roof corner outside'
+            if(name.match(/corner/)) return 'roof corner outside'
+            if(name.match(/end ridged tile/)) return 'roof end'
+            if(name.match(/doub.+(roof.+inv|inv.+roof)/)) return 'roof inverted double'
+            if(name.match(/roof.+inv|inv.+roof/) && name.match('corn')) return 'roof inverted corner'
+            if(name.match(/roof.+inv|inv.+roof/)) return 'roof inverted'
+            if(name.match(/roof.+tile.+plate/)) return 'roof plate'
+            if(name.match(/roof.+tile.+45/)) return 'roof 01'
+            if(name.match(/ridged.+tile.+25/)) return 'roof ridge'
+            if(name.match(/ridged.+tile.+45/)) return 'roof ridge'
+            if(name.match(/roof.+tile/)) return 'roof 01'
+            if(name.match(/ridged.+tile/)) return 'roof 01'
         }
     }
 
@@ -295,14 +324,14 @@
       const index = colorOrder.indexOf(color)
       return index == -1 ? 'Z' : index.toString().padStart(3, '0')
     }
-    const getSort = node => (getCategory(node) + '-' +
-                            getType(node) + '-' +
-                            getSize(node) + '-' +
+    const getSort = node => (getCategory(node) + ' - ' +
+                            getType(node) + ' - ' +
+                            getSize(node) + ' - ' +
                             getColorIndex(getColor(node))
                             ).toLowerCase()
-                            .replaceAll(',', '')
-                            .replaceAll('  ', ' ').replaceAll('  ', ' ')
-                            .replaceAll(' ', '_')
+                            //.replaceAll(',', '')
+                            //.replaceAll('  ', ' ').replaceAll('  ', ' ')
+                            //.replaceAll(' ', '_')
 
     const setList = document.location.toString().match('inventories')
         ? document.querySelector('.tablesorter')
