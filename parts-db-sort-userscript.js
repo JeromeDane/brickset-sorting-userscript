@@ -127,17 +127,25 @@
     const rename = node => renames[getDesign(node)]?.toLowerCase() || getName(node)
 
     const resize = {
-      3063: '2x2',
-      4460: '1x2x3',
-      6143: '2x2',
-      11215: '2x5x1',
-      30068: '1x1',
-      30151: '2x2x2'
-
+        2780: '002',
+        3063: '2x2',
+        3673: '002',
+        4274: '001',
+        4460: '1x2x3',
+        6143: '2x2',
+        6562: '001',
+        11215: '2x5x1',
+        30068: '1x1',
+        32002: '001',
+        32192: '125',
+        30151: '2x2x2',
+        43093: '001',
+        61332: '002',
+        89678: '001'
     }
-    const getSize = node => (
-        resize[getDesign(node)] ||
-        node.querySelector('h1 a').innerText.toLowerCase().match(/\d+\s*x\s*\d+(\s*x\s*\d+(\/\d)?)?/)?.[0]
+    const getSize = part => (
+        resize[getDesign(part)] ||
+        part.querySelector('h1 a').innerText.toLowerCase().match(/\d+\s*x\s*\d+(\s*x\s*\d+(\/\d)?)?/)?.[0]
        )
        ?.replaceAll(' ', '')
        .replace(/(\d+)\/(\d+)/, (_, numerator, denominator) => (numerator / denominator).toFixed(2))
@@ -146,7 +154,9 @@
             if(sizes.length == 2) sizes.push('0')
             const height = sizes[2]
             return sizes.slice(0,2).map(d => d.padStart(2, '0')).sort().concat([height]).map(d => d.padStart(2, '0')).join('x')
-        })
+       }) ||
+       getName(part).replaceAll(',', '.')
+           .match(/(\d+)(\.\d+)?/)?.[1]?.padStart(3,'0')
 
     const getName = part => trim(part.querySelector('h1 a').innerText.toLowerCase())
 
@@ -277,6 +287,161 @@
             if(name.match(/roof.+tile.+25/)) return `roof 01 ${getSize(part)} 01`
             if(name.match(/roof.+tile/)) return `roof 01 ${getSize(part)} 00`
             if(name.match(/ridged.+tile/)) return `roof 01 ${getSize(part)} 00`
+        },
+        'Connectors': part => {
+            switch(getDesign(part)) {
+                case '2566': return 'shaft assembly'
+                case '3628': return 'holder 3 shaft'
+                case '10197': return 'axle beam 002'
+                case '27940': return 'axle beam 001'
+                case '32002': return 'peg'
+                case '32187': return 'gear middle ring 000'
+                case '42610': return 'gear hub'
+                case '10288':
+                case '49155':
+                    return 'angle element branched'
+                case '61903': return 'universal joint'
+                case '72869': return 'holder 90 deg'
+                case '99008': return 'axle krydskaksel'
+                case '43093':
+                case '6562':
+                case '65249':
+                case '11214':
+                case '11214':
+                case '18651':
+                    return 'peg axle'
+                case '89678': return 'peg'
+            }
+            const name = getName(part)
+            if(name.match(/branch.+axle/)) return 'axle branched'
+            if(name.match(/axle.+extension/)) return 'cross axle extension'
+            if(name.match(/axle.+end.+stop/)) return 'axle end stop'
+            if(name.match(/axle.+stop/)) return 'axle stop'
+            if(name.match(/axle.+knob/)) return 'axle knob'
+            if(name.match(/axle.+snap/)) return 'peg axle'
+            if(name.match(/axle.+ball|ball.+axle/)) return 'axle ball'
+            if(name.match(/axle.+beam|beam.+axle/)) return 'axle beam 00'
+            if(name.match(/shaft.+ball/)) return 'shaft ball'
+            if(name.match(/shaft.+cross.+hole/)) return 'shaft cross hole'
+            if(name.match(/cross.+hole.+double/)) return 'cross hole double'
+            if(name.match(/ball.+fork/)) return 'fork ball coupling'
+            if(name.match(/claw.+fork/)) return 'fork claw'
+            if(name.match(/link.+fork.+stump/)) return 'link fork stump'
+            if(name.match(/shaft.+hole/)) return 'shaft hole'
+            if(name.match(/angle.+element/)) return 'angle element'
+            if(name.match(/con.+bush/)) return 'peg'
+            if(name.match(/ball.+snap/)) return 'peg ball'
+            if(name.match(/hole.+holder/)) return 'holder hole'
+            if(name.match(/stick.+holder/)) return 'holder stick'
+            if(name.match(/double.+snap/)) return 'peg double'
+            if(name.match(/module.+bush/)) return 'peg module'
+            if(name.match('holder')) return 'holder'
+            if(name.match(/bush.+friction/)) return 'snap'
+            if(name.match(/bush.+tube/)) return 'snap tube'
+            if(name.match(/stub.+bush/)) return 'link stub peg'
+            if(name.match(/snap.+cross.+hole/)) return 'peg bush'
+            if(name.match(/combi.+hub.+stick/)) return 'shaft cross hole 00'
+            if(name.match('fork')) return 'link fork'
+            if(name.match('stump')) return 'link stump'
+            if(name.match('peg')) return 'peg'
+            if(name.match('bush')) return 'bush'
+            if(name.match('axle')) return 'axle'
+            if(name.match('snap')) return 'snap'
+            if(name.match('shaft')) return 'shaft'
+        },
+        'Decoration Elements': part => {
+            switch(getDesign(part)) {
+                case '15070': return 'teeth 000'
+                case '15208': return 'teeth 002'
+                case '15209': return 'teeth 003'
+            }
+            const name = getName(part)
+            if(name.match('screen')) return 'screen'
+            if(name.match(/plate.+tooth/)) return 'teeth 001'
+        },
+        'Fences And Ladders': part => {
+            switch(getDesign(part)) {
+                case '32932': return 'fence asian'
+                case '15332':
+                case '21229':
+                    return 'fence bar'
+                case '33303': return 'fence picket'
+                case '30095': return 'ladder grating'
+                case '6020': return 'ladder lattice'
+            }
+            const name = getName(part)
+            if(name.match(/iron.+fence/)) return 'fence iron'
+            if(name.match('fence')) return 'fence'
+            if(name.match('hanger')) return 'hanger'
+        },
+        'Frames, Windows, Walls And Doors': part => {
+            const name = getName(part)
+            if(name.match(/(for|f\.).+frame/)) return 'frame z insert'
+            if(name.match(/frame.+tripartite/)) return 'frame tripartite'
+            if(name.match(/frame.+train/)) return 'frame train'
+            if(name.match(/window.+frame/)) return 'frame window'
+            if(name.match('frame')) return 'frame'
+            if(name.match(/wall.+(circle|round)/)) return 'wall circle'
+            if(name.match(/wall.+double/)) return 'wall ' + getSize(part) + ' double'
+            if(name.match(/wall.+window/)) return 'wall ' + getSize(part) + ' window'
+            if(name.match(/wall.+slit/)) return 'wall ' + getSize(part) + ' slit'
+            if(name.match('wall')) return 'wall ' + getSize(part)
+        },
+        'Functional Elements': part => {
+            switch(getDesign(part)) {
+                case '98286':
+                case '98285':
+                    return 'hinge plate'
+            }
+            const name = getName(part)
+            if(name.match(/magasine.+ball/)) return 'ball magazine'
+            if(name.match('arrow')) return 'arrow'
+            if(name.match('cardan')) return 'cardan'
+            if(name.match(/drum.*holder/)) return 'drum holder'
+            if(name.match('drum')) return 'drum'
+            if(name.match(/hinge.*plate|plate.*hinge/)) return 'hinge plate'
+            if(name.match('hinge')) return 'hinge'
+            if(name.match('shock')) return 'shock'
+            if(name.match('shooter')) return 'shooter'
+            if(name.match(/steering.*gear.+module|track.+rod/)) return 'track rod'
+            if(name.match('turntable')) return 'turntable'
+        },
+        'Functional Elements, Gear Wheels And Racks': part => {
+            switch(getDesign(part)) {
+                case '6589':
+                case '87407':
+                    return 'gear bevel'
+            }
+            const name = getName(part)
+            if(name.match('block')) return 'block'
+            if(name.match(/bevel.+(gear|wheel)|(gear|wheel).+bevel/)) return 'gear bevel'
+            if(name.match(/worm.+(gear|wheel)|(gear|wheel).+worm/)) return 'gear worm'
+            if(name.match(/(gear|wheel).+(angled|conical)|(angled|conical).+(gear|wheel)/)) return 'gear angled'
+            if(name.match(/(gear|wheel).+z12/)) return 'gear z12'
+            if(name.match('(gear|wheel)')) return 'gear'
+        },
+        'Gates And Roofs': part => {
+            switch(getDesign(part)) {
+                case '4219': return 'garage panel'
+            }
+            const name = getName(part)
+            if(name.match('door')) return 'door'
+        },
+        'Half Beams': part => {
+            const name = getName(part)
+            if(name.match('lever')) return 'lever'
+        },
+        'Interior': part => {
+            const name = getName(part)
+            if(name.match('tub')) return 'tub'
+        },
+        'Plates': part => {
+            const name = getName(part)
+            if(name.match(/plate.+tr\./)) return 'plate'
+            if(name.match('corner')) return 'plate corner'
+            if(name.match('frame')) return 'plate frame'
+            if(name.match('knob')) return 'plate knob'
+            if(name.match('tile')) return 'plate tile'
         }
     }
 
