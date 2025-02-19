@@ -80,6 +80,7 @@
          ]
     }
     const renames = {
+      21385: 'cat kitten', // KITTEN 'NO. 1'
       3659: 'arch 1x4', // BRICK W. BOW 1X4
       4490: 'arch 1x3', // BRICK W. BOW 1X3
       6081: 'arch tab 1x4x1', // BRICK W. BOW 4X1X1 1/3
@@ -108,7 +109,7 @@
       44126: '2x6', // BRICK 2 X 6 W. BOW
       49949: 'shell 6x10x4',
       49307: 'ridge 1x1', // PLATE 1X1X2/3, OUTSIDE BOW
-      50950: '1x3', // Brick w/bow 1/3
+      //50950: '1x3', // Brick w/bow 1/3
       51704: 'arch 2x10x2', // BRICK 2X10X2 BOW
       61678: 'brick with bow 1X4', // Brick w. bow 1x4
       67810: 'arch tab 2x2', // BRICK W/ BOW 2X2X1 1/3
@@ -161,6 +162,26 @@
     const getName = part => trim(part.querySelector('h1 a').innerText.toLowerCase())
 
     const types = {
+        'Animals & Nature': part => {
+            const design = getDesign(part)
+            const name = getName(part)
+            if(name.match(/bamboo/)) return 'nature, bamboo'
+            if(name.match(/claw/)) return 'clar'
+            if(name.match(/horn/)) return 'horn' // must go before bush due to "HORN, W/ 4.85 BUSH"
+            if(name.match(/bush/)) return 'nature, bush'
+            if(name.match(/flower/)) return 'nature, flower'
+            if(name.match(/grass/)) return 'nature, grass'
+            if(name.match(/leaf/)) return 'nature, leaf'
+            if(name.match(/leaves/)) return 'nature, leaves'
+            if(name.match(/limb element/)) return 'nature, limb element'
+            if(name.match(/plant/)) return 'nature, plant'
+            if(name.match(/stalk/)) return 'nature, stalk'
+            if(name.match(/tree/)) return 'nature, tree'
+        },
+        'Bricks': part => {
+            const nname = getName(part)
+            if(name.match(/bow/)) return 'brick, bow'
+        },
         'Bricks, Special': part => {
             const design = getDesign(part)
             switch(design) {
@@ -192,7 +213,7 @@
             if(name.match(/sliding|groove/)) return 'groove'
             if(name.match(/snap/)) return 'click snap'
             if(name.match(/stick/)) return 'bar stick'
-            if(name.match(/stub/)) return 'stub'
+            if(name.match(/stu(b|mp)/)) return 'stub'
         },
         'Bricks, Special Circles And Angles': part => {
             switch(getDesign(part)) {
@@ -436,12 +457,158 @@
             if(name.match('tub')) return 'tub'
         },
         'Plates': part => {
+            switch(getDesign(part)) {
+                case '86996': return 'plate 1/3'
+                case '35787': case '66287': return 'plate tile triangle'
+                case '1134': case '27263': return 'plate tile corner cut'
+                case '68420': return 'plate tile shield'
+                case '14719': return 'plate tile corner'
+            }
             const name = getName(part)
-            if(name.match(/plate.+tr\./)) return 'plate'
+            if(name.match(/grille|lattice/)) return 'plate grille'
+            if(name.match(/plate.+(no|tr)\./)) return 'plate'
+            if(name.match('tile')) return 'plate tile'
             if(name.match('corner')) return 'plate corner'
+            if(name.match('ross')) return 'plate cross'
+            if(name.match(/cut\s*out/)) return 'plate cutout'
             if(name.match('frame')) return 'plate frame'
             if(name.match('knob')) return 'plate knob'
-            if(name.match('tile')) return 'plate tile'
+            
+        },
+        'Plates, Special': part => {
+            switch(getDesign(part)) {
+                case '20482':
+                case '31561':
+                case '31570':
+                    return 'bar 00'
+                case '32828': return 'bar 01'
+                case '26047': return 'bar 02'
+                case '60478': return 'bar 03'
+                case '2540': return 'bar 04'
+                case '48336': return 'bar 05'
+                case '92692': return 'bar 06'
+                case '3839': return 'bar 07'
+                case '43876':
+                case '88072':
+                    return 'bar 08'
+                case '18649': return 'bar 09'
+                case '75937':
+                case '30094':
+                    return 'bar 99'
+                case '36840': return 'angle up 00'
+                case '73825': return 'angle up 01'
+                case '99780': return 'angle up 02'
+                case '99207': return 'angle up 03'
+                case '36841': return 'angle down 00'
+                case '79389': return 'angle down 01'
+                case '99781': return 'angle down 02'
+                case '21712':
+                case '92411':
+                    return 'angle down 03'
+                case '2436':
+                case '10201':
+                case '28802':
+                    return 'angle down 04'
+                case '21731':
+                case '93274':
+                    return 'angle down 05'
+                case '44302': return 'fork 00'
+                case '60471': return 'fork 01'
+                case '44860':
+                case '4085':
+                    return 'holder horizontal 00' // 1x1
+                case '78256':
+                case '60897':
+                    return 'holder horizontal 01' //  1x1
+                case '52738':
+                case '61252':
+                case '63868':
+                case '42923':
+                case '65458':
+                    return 'holder vertical 00'
+                case '11476': return 'holder vertical 01'
+                case '60470':
+                case '30350':
+                case '11399':
+                    return 'holder vertical 02'
+                case '15712':
+                case '44842':
+                    return 'holder vertical2 01'
+                case '12825': return 'holder vertical2 02'
+                case '11458': return 'hole 01'
+                case '28809': case '18677': return 'hole 02'
+                case '10247': return 'hole 03'
+                case '2817': return 'hole 04'
+                case '26599': return 'hole 05'
+                case '35459': return 'hole 06'
+                case '3709': return 'hole 99'
+                case '30383': case '53922': return 'stub 00'
+                case '44301': case '49715': return 'stub 01'
+            }
+            const name = getName(part)
+            if(name.match(/beam/)) return 'beam'
+            if(name.match(/combi|stub/)) return 'stub 99'
+            if(name.match(/forks?/)) return 'fork 99'
+            if(name.match(/wall/)) return 'wall 99'
+            if(name.match(/plate.+w\/.*1\.5.+plate/)) return 'angle 99'
+            if(name.match(/ang(le|ular)/)) return 'angle z'
+            if(name.match(/ball.*(cup|socket)/)) return 'ball cup 99'
+            if(name.match(/ball/)) return 'ball 99'
+            if(name.match(/handle|hook|sc?haft/)) return 'bar 99'
+            if(name.match(/h(o|u)le/)) return 'hole 99'
+            if(name.match(/knob/)) return 'knob'
+            if(name.match(/lamp/)) return 'lamp'
+            if(name.match(/holder|hook|grip/)) return 'holder z 99'
+            if(name.match(/rail|gliding|slide/)) return 'rail 99'
+            if(name.match(/shaft|stick|stump/)) return 'stump'
+            if(name.match(/snap/)) return 'snap'
+            if(name.match(/tile/)) return 'tile'
+        },
+        'Plates, Special Circles And Angles': part => {
+            switch(getDesign(part)) {
+                case '24307':
+                case '14181':
+                case '30355':
+                case '24299':
+                case '30356':
+                case '24307':
+                    return 'plate angle'
+                case '28626': case '85861': return 'plate round 01'
+                case '16423':
+                case '16422':
+                    return 'tile'
+                case '50303': case '43719': return 'plate angles'
+                case '38373':
+                case '35394':
+                case '37380':
+                case '101788':
+                case '3960':
+                case '47023':
+                    return 'dish'
+                case '6003': return 'plate circle 1/4'
+            }
+            const name = getName(part)
+            if(name.match(/tile.+bow/)) return 'tile bow'
+            if(name.match(/tile.+hole/)) return 'tile hole'
+            if(name.match(/tile/)) return 'tile'
+            if(name.match(/slide shoe/)) return 'slide shoe'
+            if(name.match(/arch/)) return 'plate arch'
+            if(name.match(/heart/)) return 'plate heart'
+            if(name.match(/eye/)) return 'plate special eye'
+            if(name.match(/aerial|dish|parabol(a|ic)/)) return 'dish'
+            if(name.match(/angles/)) return 'plate angles'
+            if(name.match(/angle/)) return 'plate angle'
+            if(name.match(/degrees|°/)) return 'plate angles'
+            if(name.match(/1\/4.+circle.+cut/)) return 'plate circle 1/4 cut'
+            if(name.match(/1\/4.+circle/)) return 'plate circle 1/4'
+            if(name.match(/circle/)) return 'plate circle'
+            if(name.match(/corner/)) return 'plate corner'
+            if(name.match(/knob/)) return 'plate knob'
+            
+            if(name.match(/round.+hole/)) return 'plate round hole z'
+            if(name.match(/rounded/)) return 'plate rounded'
+            if(name.match(/round/)) return 'plate round z'
+
         }
     }
 
